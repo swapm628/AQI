@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQI Prediction</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('/static/pixelcut-export.jpeg'); /* Background image */
+            background-size: cover; /* Ensures the image covers the entire background */
+            background-position: center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #fff; /* White color for better visibility */
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff; /* White color for better visibility */
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.9); /* Slight transparency to blend into bg */
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            max-width: 350px; /* Reduced max-width for form */
+            width: 100%;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9em; /* Adjust font size to normal */
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 6px; /* Reduced padding for normal size */
+            border: 1.5px solid #bdc3c7; /* Lighter border */
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        input[type="submit"], .refresh-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1em; /* Reduced font size */
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"]:hover, .refresh-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .result-section {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Transparency to blend with bg */
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 350px; /* Ensure consistent size */
+            text-align: center;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-section h3 {
+            color: #111;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .result-section p {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .form-group {
+                flex-direction: column;
+            }
+
+            .form-group input[type="number"] {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Air Quality Index Prediction</h1>
+        <h2>Fill in the values to predict AQI</h2>
+
+        <form action="/predict" method="POST">
+            <div class="form-group">
+                <div>
+                    <label for="PM2.5">PM2.5:</label>
+                    <input type="number" name="PM2.5" step="any" value="{{ pm25 }}" required>
+                </div>
+                <div>
+                    <label for="NO">NO:</label>
+                    <input type="number" name="NO" step="any" value="{{ no }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <label for="NO2">NO2:</label>
+                    <input type="number" name="NO2" step="any" value="{{ no2 }}" required>
+                </div>
+                <div>
+                    <label for="NOx">NOx:</label>
+                    <input type="number" name="NOx" step="any" value="{{ nox }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <label for="CO">CO:</label>
+                    <input type="number" name="CO" step="any" value="{{ co }}" required>
+                </div>
+                <div>
+                    <label for="SO2">SO2:</label>
+                    <input type="number" name="SO2" step="any" value="{{ so2 }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <label for="O3">O3:</label>
+                    <input type="number" name="O3" step="any" value="{{ o3 }}" required>
+                </div>
+            </div>
+
+            <input type="submit" value="Predict" id="yyy">
+        </form>
+
+        <!-- Refresh Button -->
+        <form action="/refresh" method="GET" id="xxx">
+            <button class="refresh-btn">Refresh</button>
+        </form>
+
+        {% if prediction %}
+            <div class="result-section">
+                <h3>Predicted AQI Value: {{ prediction }}</h3>
+                <p><strong>AQI Category:</strong> {{ category }}</p>
+                <p><strong>Health Advice:</strong> {{ health_advice }}</p>
+                <p><strong>Suggested Solutions:</strong> {{ solutions }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
